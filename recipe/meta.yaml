@@ -17,6 +17,7 @@ build:
   merge_build_host: true  # [win]
   number: 1
   noarch: generic
+  skip: True # [not linux64]
   rpaths:
     - lib/R/lib/
     - lib/
@@ -25,13 +26,13 @@ requirements:
   build:
     - {{ posix }}zip               # [win]
   host:
-    - r-base
+    - r-base {{ r_version }}
     - r-ggplot2 >2.2.1
     - r-gtable
     - r-rlang
     - r-scales
   run:
-    - r-base
+    - r-base {{ r_version }}
     - r-ggplot2 >2.2.1
     - r-gtable
     - r-rlang
@@ -55,3 +56,19 @@ extra:
   recipe-maintainers:
     - conda-forge/r
     - druvus
+  skip-lints:
+    # These are needed because of bug: https://github.com/anaconda-distribution/anaconda-linter/issues/197
+    - http_url
+    - invalid_url
+
+    - host_section_needs_exact_pinnings
+    - missing_dev_url
+    - missing_description
+    - missing_documentation
+
+  anaconda-services:
+    ref:  https://anaconda.zendesk.com/agent/tickets/35116
+    reason: "needed for r-devtools"
+    recipe-maintainers:
+      - bkreider
+
